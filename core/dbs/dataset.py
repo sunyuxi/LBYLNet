@@ -16,14 +16,15 @@ import pdb
 class Sampler(REFERDB):
     def __init__(self, db_config, split=None, sys_config=None):
         super(Sampler, self).__init__(db_config)
-        self._mean    = np.array([0.40789654, 0.44719302, 0.47026115], dtype=np.float32)
-        self._std     = np.array([0.28863828, 0.27408164, 0.27809835], dtype=np.float32)
-        self._eig_val = np.array([0.2141788, 0.01817699, 0.00341571], dtype=np.float32)
-        self._eig_vec = np.array([
-            [-0.58752847, -0.69563484, 0.41340352],
-            [-0.5832747, 0.00994535, -0.81221408],
-            [-0.56089297, 0.71832671, 0.41158938]
-        ], dtype=np.float32)
+        #deleted_by_sunyuxi
+        #self._mean    = np.array([0.40789654, 0.44719302, 0.47026115], dtype=np.float32)
+        #self._std     = np.array([0.28863828, 0.27408164, 0.27809835], dtype=np.float32)
+        #self._eig_val = np.array([0.2141788, 0.01817699, 0.00341571], dtype=np.float32)
+        #self._eig_vec = np.array([
+        #    [-0.58752847, -0.69563484, 0.41340352],
+        #    [-0.5832747, 0.00994535, -0.81221408],
+        #    [-0.56089297, 0.71832671, 0.41158938]
+        #], dtype=np.float32)
         
         self._dataset = sys_config.dataset
         self.data_dir = sys_config.data_dir
@@ -36,6 +37,10 @@ class Sampler(REFERDB):
         elif self._dataset == 'flickr':
             self._data_root = osp.join(sys_config.data_dir, 'refer', 'ln_data', 'Flickr30k')
             self._im_dir = osp.join(self.data_dir, 'flickr30k_images')
+        elif self._dataset == 'rsvg':
+            print(('sunyuxi', 'load rsvg1'), flush=True)
+            self._dataset_root = osp.join(sys_config.data_dir, 'refer', 'ln_data', 'rsvg')
+            self._im_dir = osp.join(self._dataset_root, 'images')
         else: #refer coco etc.
             self._data_root = osp.join(sys_config.data_dir, 'refer', 'ln_data', 'other')
             self._im_dir = osp.join(self._data_root, 'images', 'mscoco', 'images', 'train2014')
@@ -59,7 +64,10 @@ class Sampler(REFERDB):
             self.database += torch.load(imgset_path, map_location = "cpu")
 
         # processing database
-        if self._dataset == 'flickr':
+        if self._dataset == 'rsvg':
+            print(('sunyuxi', 'load rsvg2'), flush=True)
+            self.img_names, _, self.bboxs, self.phrases, _ = zip(*self.database)
+        elif self._dataset == 'flickr':
             self.img_names, self.bboxs, self.phrases = zip(*self.database)
         else:
             self.img_names, _, self.bboxs, self.phrases, _ = zip(*self.database)
@@ -68,7 +76,7 @@ class Sampler(REFERDB):
         self.corpus = torch.load(db_config["corpus_path"], map_location='cpu')
         
         self.covert_bbox = []
-        if not (self._dataset == 'referit' or self._dataset == 'flickr'): # for refcoco, etc
+        if not (self._dataset == 'referit' or self._dataset == 'flickr' or self._dataset == 'rsvg'): # for refcoco, etc
             # covert x1y1wh to x1y1x2y2
             for bbox in self.bboxs:
                 bbox = np.array(bbox, dtype=int)
@@ -76,6 +84,8 @@ class Sampler(REFERDB):
                 bbox[3] += bbox[1]
                 self.covert_bbox.append(bbox)
         else:
+            #x1y1x2y2
+            print(('sunyuxi', 'load rsvg3'), flush=True)
             for bbox in self.bboxs:                                     # for referit, flickr
                 bbox = np.array(bbox, dtype=int)
                 self.covert_bbox.append(bbox)
@@ -106,7 +116,9 @@ SUPPORTED_DATASETS = {
         'params': {'dataset': 'refcocog', 'split_by': 'google'}
     },
     'flickr': {
-        'splits': ('train', 'val', 'test')}
+        'splits': ('train', 'val', 'test')},
+    'rsvg': {
+        'splits': ('train', 'val', 'test')},
 }
 
 

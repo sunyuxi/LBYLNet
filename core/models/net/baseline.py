@@ -78,7 +78,7 @@ class Baseline(nn.Module):
         self.joint_embedding_dropout = self.cfg_db['joint_embedding_dropout']
         self.joint_mlp_layers        = self.cfg_db['joint_mlp_layers']
         self.n_layers                = self.cfg_db['n_layers']
-        self.output_sizes            = self.cfg_db['output_sizes']
+        #self.output_sizes            = self.cfg_db['output_sizes'] # deleted_by_sunyuxi
         self.hidden_size             = self.cfg_db['hidden_size']
         self.input_size              = self.cfg_db['input_size']
         self.num_dirs                = 2 if self.cfg_db['bidirectional'] else 1

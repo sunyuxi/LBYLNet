@@ -91,6 +91,7 @@ class Loss(nn.Module):
         self.img_dim = input_size
         self.off_weight = off_weight
         self.anchors = np.array([list(anchor) for anchor in anchors])
+        print(('sunyuxi_anchors', self.anchors), flush=True)
         self.anchors = self.anchors.reshape(3, 3, 2)
         self.anchors = [self.anchors[i] for i in range(0, 3)]
         self.num_anchors = len(anchors)

@@ -17,7 +17,8 @@ class BertEncoder(nn.Module):
         super(BertEncoder, self).__init__()
         self.cfg_db = cfg_db
         self.bert_name = cfg_sys.lang_encoder
-        self.model = BertModel.from_pretrained(self.bert_name)
+        #self.model = BertModel.from_pretrained(self.bert_name)
+        self.model = BertModel.from_pretrained('/mnt/A/sunyuxi/visualgrounding/RemoteSensingVisualGrounding/baselines/LBYLNet/cache/bert-base-uncased.tar.gz')
         if self.bert_name == 'bert-base-uncased':
             self.lang_dim = 768
         else:

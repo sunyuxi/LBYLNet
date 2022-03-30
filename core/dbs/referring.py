@@ -12,7 +12,7 @@ class REFERDB(BASE):
         self._configs["random_color"]     = True
         self._configs["random_lighting"]  = True
         self._configs["input_size"]     = [256, 256]
-        self._configs["output_sizes"]   = [32,32]
+        #self._configs["output_sizes"]   = [32,32] # deleted_by_sunyuxi
 
         # Configs for both training and testing
         self._configs["anchors"]              = None

@@ -34,8 +34,10 @@ class LBYLNet(nn.Module):
 
         # lang_encoder
         if self.lstm:
+            assert(False)
             self.lang_encoder = RNNEncoder(self.cfg_db)
         else:
+            print(('sunyuxi', 'language encoder-bert'), flush=True)
             self.lang_encoder = BertEncoder(self.cfg_db, cfg_sys=cfg_sys)
         
         # fusion module
@@ -57,7 +59,7 @@ class LBYLNet(nn.Module):
         self.context_block = None
         if self.cfg_sys.context:
             self.context_block = context.get(cfg_sys.context)(self.joint_out_dim, mapdim=self.map_dim)
-            # print("using context module {}".format(self.context_block))
+            print("sunyuxi using context module {}".format(self.context_block), flush=True)
 
         self.out_funcs = nn.ModuleList([self._make_pred(self.joint_out_dim, 3*5) 
                                   for _ in range(3)])
@@ -71,15 +73,22 @@ class LBYLNet(nn.Module):
         batch_size = images.shape[0]
         # visual language encoders 
         visu_feats = self.visu_encoder(images) # fpn P3->P5
+        #print(visu_feats, flush=True)
+
         coord_feats = [self._make_coord(batch_size, x.shape[2], x.shape[3]) for x in visu_feats]
         lang_feat = self.lang_encoder(phrases, mask=phrases.gt(0))
+        #print(lang_feat, flush=True)
+        
         # only use a global representation of language
         # you can also use more complex modeling using word-level representations
         # to improve performance, motivated by lots of previous works.
         # Usage: lang_feat = lang_feat['words'] shape [seq_len, dim]
-        lang_feat = lang_feat['hidden']    
+        lang_feat = lang_feat['hidden']   
+        #print(lang_feat.shape)
         lang_feat  = self.mapping_lang(lang_feat)
-
+        #print(lang_feat)
+        #print(lang_feat.shape, flush=True)
+        #print('======')
         # use FILM to enhance visual-language fusion
         gamma = [F.tanh(gamma(lang_feat)) for gamma in self.gamma]
         beta = [F.tanh(beta(lang_feat)) for beta in self.beta]
@@ -126,7 +135,7 @@ class LBYLNet(nn.Module):
         self.joint_embedding_dropout = self.cfg_db['joint_embedding_dropout']
         self.joint_mlp_layers        = self.cfg_db['joint_mlp_layers']
         self.n_layers                = self.cfg_db['n_layers']
-        self.output_sizes            = self.cfg_db['output_sizes']
+        #self.output_sizes            = self.cfg_db['output_sizes'] # deleted_by_sunyuxi
         self.hidden_size             = self.cfg_db['hidden_size']
         self.input_size              = self.cfg_db['input_size']
         self.num_dirs                = 2 if self.cfg_db['bidirectional'] else 1

@@ -182,7 +182,7 @@ def random_crop_(image, bbox, random_scales, view_size, border=64):
 
     return cropped_image, cropped_bbox
 
-def crop_image(image, center, size, output_size=None):
+'''def crop_image(image, center, size, output_size=None):
     if output_size == None:
         output_size = size
 
@@ -215,7 +215,7 @@ def crop_image(image, center, size, output_size=None):
         ctx - o_width  // 2
     ])
 
-    return cropped_image, border, offset
+    return cropped_image, border, offset'''
 
 def letterbox(img, mask, height, color=None):  # resize a rectangular image to a padded square
     if color is None:
@@ -355,6 +355,7 @@ def resize_image_(image, bbox, input_size, padding_color=None):
     return image, bbox
 
 
+
 def show_example(image, bbox, phrase, font_size=0.5, color=None, name=None):
     image = image.copy()
     # pdb.set_trace()
@@ -436,6 +437,7 @@ class InputFeatures(object):
         self.input_type_ids = input_type_ids
 
 def convert_examples_to_features(examples, seq_length, tokenizer):
+    print(('sunyuxi_max_seq_length', seq_length), flush=True)
     """Loads a data file into a list of `InputBatch`s."""
     features = []
     for (ex_index, example) in enumerate(examples):

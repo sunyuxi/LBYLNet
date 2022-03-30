@@ -29,7 +29,8 @@ class Net(object):
         system_config = SystemConfig().update_config(config["system"])
         system_config.lr = 0.001
         self.system_config = system_config
-        anchors = make_anchors(system_config.dataset, 416)
+        #anchors = make_anchors(system_config.dataset, 416)
+        anchors = make_anchors(system_config.dataset, 1024)
         config["db"]["anchors"] = anchors
         config["db"]["corpus_path"] = get_file_path("..", "data", "refer", "data",  config["system"]["dataset"], "corpus.pth") 
         self.config = config
