@@ -304,7 +304,7 @@ def main(gpu, ngpus_per_node, args):
     workers = args.workers
     logger.info("Process {}: loading all datasets...".format(rank))
     logger.info("Process {}: using {} workers".format(rank, workers))
-
+    # datasets['refer']: Sampler
     train_db = datasets['refer'](config["db"], split=train_split, sys_config=system_config)
     valid_db = datasets['refer'](config["db"], split=val_split, sys_config=system_config)
 
